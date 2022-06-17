@@ -2,9 +2,9 @@
 
   <h1><code>Atomic CSS by Rust</code></h1>
 
-  <strong>We re-write Atomic CSS <a href="https://acss.io">acss.io by Rust language</a>.</strong>
+  <strong>We re-write Atomic CSS <a href="https://acss.io" target="_blank">acss.io </a> by Rust language.</strong>
 
-  <sub>Built with 🦀🕸 by <a href="https://rustwasm.github.io/">The Rust and WebAssembly Working Group</a></sub>
+  <sub>Built with 🦀🕸 by <a href="https://rustvietnam.com/" target="_blank">Acscoder</a></sub>
 </div>
 
 ## About
