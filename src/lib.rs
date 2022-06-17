@@ -215,6 +215,8 @@ fn filter_css_param(param:&str)->String{
         (r#"calc(100%*"#.to_owned()+param+r#")"#).to_string()
     }else if regex_calc.is_match(param){
         param.to_string().replace("[","cacl(").replace("]",")")
+    }else if is_hex(param){
+        hex_to_rgb(param)
     }else{
         param.to_string()
     }
@@ -228,4 +230,25 @@ fn css_dedup_classes(classes:String)->String {
      params.sort();
      params.dedup();
      params.join(" ")
+}
+fn hex_to_rgb(param:&str)->String{
+    let regex_hex = Regex::new(r#"#(\w{2})(\w{2})(\w{2})([\d|.]{2,3})"#).unwrap();
+    let mut ret: String = "".to_string();
+    if regex_hex.is_match(param){
+        for cap in regex_hex.captures_iter(param) {
+            ret = "rgba(".to_owned()+hex_to_dec(&cap[1]).as_str()+","+hex_to_dec(&cap[2]).as_str()+","+hex_to_dec(&cap[3]).as_str()+","+&cap[4]+")";
+        }
+    }
+    ret
+}
+fn is_hex(param: &str) -> bool {
+    let regex_hex = Regex::new(r#"#(\w{2})(\w{2})(\w{2})([\d|.]{2,3})"#).unwrap();
+    regex_hex.is_match(param)
+}
+fn hex_to_dec(hex: &str) -> String {
+    let z = i64::from_str_radix(hex, 16);
+    match z{
+        Ok(x) => x.to_string(),
+        Err(_) => 0.to_string(),
+    }
 }
