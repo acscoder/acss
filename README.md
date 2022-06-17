@@ -12,39 +12,38 @@
 ACSS stands for Atomized CSS. ACSS relies on Atomizer to dynamically generate an Atomic stylesheet from the ACSS classes you're actually using in your project (no unused styles!), or predeclare styles in configuration - it's up to you. ACSS is not opinionated, brings no CSS of its own, and integrates nicely with your favorite task runner. 
 
 ## 🚴 Usage
-
+### 🐑 Install wasm-pack 
+[Learn more about `wasm-pack` here.](https://rustwasm.github.io/)
+```
+curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+```
 ### 🐑 Use `cargo generate` to Clone this Template
 
 [Learn more about `cargo generate` here.](https://github.com/ashleygwilliams/cargo-generate)
 
 ```
-cargo generate --git https://github.com/rustwasm/wasm-pack-template.git --name my-project
+cargo generate --git https://github.com/acscoder/acss.git --name my-project
 cd my-project
 ```
 
 ### 🛠️ Build with `wasm-pack build`
 
 ```
-wasm-pack build
+wasm-pack build --target web
 ```
 
-### 🔬 Test in Headless Browsers with `wasm-pack test`
+### 🔬 Test in Localhost with Browsers
+If you have python
 
 ```
-wasm-pack test --headless --firefox
+python -m http.server 8000
 ```
+Open http://localhost:8000/
 
-### 🎁 Publish to NPM with `wasm-pack publish`
+Or we can use some localhost ex: Xampp, Wampp .. to open index.html
 
-```
-wasm-pack publish
-```
 
-## 🔋 Batteries Included
+## How to use class css
 
-* [`wasm-bindgen`](https://github.com/rustwasm/wasm-bindgen) for communicating
-  between WebAssembly and JavaScript.
-* [`console_error_panic_hook`](https://github.com/rustwasm/console_error_panic_hook)
-  for logging panic messages to the developer console.
-* [`wee_alloc`](https://github.com/rustwasm/wee_alloc), an allocator optimized
-  for small code size.
+* https://acss.io/quick-start.html
+* https://acss.io/reference.html
