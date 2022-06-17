@@ -1,0 +1,15 @@
+{
+  "name": "acss",
+  "collaborators": [
+    "Ann Lee<acscoder@gmail.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "acss_bg.wasm",
+    "acss.js",
+    "acss.d.ts"
+  ],
+  "module": "acss.js",
+  "types": "acss.d.ts",
+  "sideEffects": false
+}

@@ -218,7 +218,7 @@ fn filter_css_param(param:&str)->String{
     }else if is_hex(param){
         hex_to_rgb(param)
     }else{
-        param.to_string()
+        param.to_string().replace("_"," ")
     }
 }
  

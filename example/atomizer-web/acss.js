@@ -3,7 +3,7 @@ import {
     add_init_css,
     atomic_css_compile,
     atomic_css_compile_from_html,
-  } from "./pkg/acss.js";
+  } from "./wasm/acss.js";
 
   document.addEventListener("DOMContentLoaded", function () {
    
