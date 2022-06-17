@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="module" src="./acss.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.css" />
+  </head>
+  <body>
+    <div class="Bgc(#0280ae.5) C(#fff) P(20px)">
+      <h1>Atomizer Web by Rust</h1>
+  </div>
+  <div class="Bdb(2px) Bdbc(#0280ae) Bdbs(s) Ov(a)">
+    <div class="IbBox() W(1/2) Fl(left)">
+      <h2>HTML</h2>
+      <textarea id='editor-html'></textarea>
+    </div>
+    <div class="IbBox() W(1/2) Fl(right)">
+      <h2>Css</h2>
+      <textarea id='editor-css'></textarea>
+    </div>
+</div>
+<div id="result">
+ 
+</div>
+  <script>
+    var editor = CodeMirror.fromTextArea(document.getElementById('editor-html'), {
+    mode: "html",
+    
+    lineNumbers: true,
+});
+editor.save();
+var editor_css = CodeMirror.fromTextArea(document.getElementById('editor-css'), {
+    mode: "css",
+    lineNumbers: true,
+});
+editor_css.save();
+
+editor.on('change',function(cMirror){
+  document.getElementById("result").innerHTML = cMirror.getValue(); 
+  let compiledcss = atomic_css_compile_from_html(cMirror.getValue());
+  add_css_to_body(compiledcss);
+  editor_css.setValue(compiledcss.replaceAll("}", "}\n"));
+});
+document.addEventListener("DOMContentLoaded", function () {
+setTimeout(function(){
+  editor.setValue("<div class=\"D(b) Va(t) Fz(20px)\">Hello World!</div>");
+},500); });
+function add_css_to_body(css) {
+    var head = document.head || document.getElementsByTagName("head")[0],
+      style = document.createElement("style");
+    head.appendChild(style);
+    style.type = "text/css";
+    if (style.styleSheet) {
+      // This is required for IE8 and below.
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+  }
+  </script>
+  </body>
+</html>

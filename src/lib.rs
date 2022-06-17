@@ -74,7 +74,7 @@ fn css_hashmap_to_string(all_css:HashMap<String, Vec<String>>)->String {
 }
 
 fn atomic_css_classes(classes:String)->HashMap<String, Vec<String>> {
-    let class_pattern:String = r#"([a-z]*)(["#.to_owned()+PSEUDO_CLASSES.join("|").as_str()+r#"]*)(["#+COMBINATOR_ELEMENTS.join("|").as_str()+r#"]?)([A-Z][a-z]*)\(([^)]*)\)([!]?)(["#+PSEUDO_CLASSES.join("|").as_str()+r#"]*)(["#+PSEUDO_ELEMENTS.join("|").as_str()+r#"]*)(-?-?([a-z]*))"#;
+    let class_pattern:String = r#"([a-z]*)(["#.to_owned()+PSEUDO_CLASSES.join("|").as_str()+r#"]*)(["#+COMBINATOR_ELEMENTS.join("|").as_str()+r#"]?)([A-Z][A-Z a-z]*)\(([^)]*)\)([!]?)(["#+PSEUDO_CLASSES.join("|").as_str()+r#"]*)(["#+PSEUDO_ELEMENTS.join("|").as_str()+r#"]*)(-?-?([a-z]*))"#;
     let class_regex = Regex::new(class_pattern.as_str()).unwrap();
     
     let mut all_css:HashMap<String, Vec<String>> = HashMap::new();
