@@ -185,7 +185,7 @@ fn get_css_content(class:&str,param:&str,important:&str)->String{
 }
 
 fn get_param_verbose(param:&str,data:&str) -> String{
-    let param_pattern:String = param.to_string() + r#":([^,]+)"#;
+    let param_pattern:String = r#"[,|(]"#.to_string() +param + r#":([^,)]+)"#;
     let param_regex = Regex::new(param_pattern.as_str()).unwrap();
     let mut ret:String = "".to_string();
     if param_regex.is_match(data) {
