@@ -183,13 +183,13 @@ fn get_css_content(class:&str,param:&str,important:&str)->String{
     if important=="!"{ret = css_filter_important(ret);}
     ret
 }
-
 fn get_param_verbose(param:&str,data:&str) -> String{
     let param_pattern:String = r#"[,|(]"#.to_string() +param + r#":([^,)]+)"#;
     let param_regex = Regex::new(param_pattern.as_str()).unwrap();
     let mut ret:String = "".to_string();
-    if param_regex.is_match(data) {
-        for cap in param_regex.captures_iter(data) {
+    let data_match = r#"("#.to_owned()+data+r#")"#;
+    if param_regex.is_match(&data_match) {
+        for cap in param_regex.captures_iter(&data_match) {
             ret = cap[1].to_string();
         }
     }else{
