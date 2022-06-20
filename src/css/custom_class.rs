@@ -1,5 +1,29 @@
 pub const ASCSS_CLASSES_CUSTOM : &str = r#"
- 
+GridCols(<>){grid-template-columns: repeat($0, minmax(0, 1fr));}
+GridColsNone(<>){grid-template-columns:none;}
+ColStart(<:auto>){grid-column-start: $0;}
+ColEnd(<:auto>){grid-column-end: $0;}
+ColSpan(<>){grid-column: span $0 / span $0;}
+ColAuto(<>){grid-column: auto;}
+ColSpanFull(<>){grid-column: 1 / -1;}
+
+Gap(<:var(--gap)>){gap: $0;}
+GapX(<:var(--gapx)>){column-gap: $0;}
+GapY(<:var(--gapy)>){row-gap: $0;}
+GridAutoRows(<a:auto,min:min-content,max:max-content,fr:minmax(0,1fr)>){grid-auto-columns:$0;}
+GridAutoCols(<a:auto,min:min-content,max:max-content,fr:minmax(0,1fr)>){grid-auto-columns:$0;}
+GridAutoFlow(<r:row,c:column,d:dense,rd:row dense,cd:column dense>){grid-auto-flow:$0;}
+
+GridRows(<>){grid-template-rows: repeat($0, minmax(0, 1fr));}
+GridRowsNone(<>){grid-template-rows:none;}
+RowStart(<:auto>){grid-row-start: $0;}
+RowEnd(<:auto>){grid-row-end: $0;}
+RowSpan(<>){grid-row: span $0 / span $0;}
+RowAuto(<>){grid-row: auto;}
+RowSpanFull(<>){grid-row: 1 / -1;}
+PlaceContent(<c:center,s:start,e:end,b:space-between,a:space-around,e:space-evenly,s:stretch>){place-content: $0;}
+PlaceItems(<c:center,s:start,e:end,s:stretch>){place-items: $0;}
+PlaceSelf(<a:auto,c:center,s:start,e:end,s:stretch>){place-self: $0;}
 "#;
 
 const CSS_RESET : &str = r#"

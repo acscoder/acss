@@ -198,7 +198,7 @@ fn get_param_verbose(param:&str,data:&str) -> String{
     ret
 }
 fn add_css_slash(param:&str)-> String{
-    let rg = Regex::new(r#"[.|,|#|?|+|*|/|\[|\]|%]{1}"#).unwrap();
+    let rg = Regex::new(r#"[.|,|#|?|+|*|/|\[|\]|%|\|]{1}"#).unwrap();
     let mut ret: String = "".to_string();
     ret.push_str(rg.replace_all(param, "\\$0").borrow());
     ret
