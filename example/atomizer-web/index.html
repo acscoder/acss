@@ -33,6 +33,7 @@
  
 </div>
   <script>
+     document.addEventListener("DOMContentLoaded", function () {
     var editor = CodeMirror.fromTextArea(document.getElementById('editor-html'), {
     mode: "html",
     
@@ -51,10 +52,10 @@ editor.on('change',function(cMirror){
   add_css_to_body(compiledcss);
   editor_css.setValue(compiledcss.replaceAll("}", "}\n"));
 });
-document.addEventListener("DOMContentLoaded", function () {
+
 setTimeout(function(){
   editor.setValue("<div class=\"D(b) Va(t) Fz(20px)\">Hello World!</div>");
-},500); });
+},500);  
 function add_css_to_body(css) {
     var head = document.head || document.getElementsByTagName("head")[0],
       style = document.createElement("style");
@@ -67,6 +68,7 @@ function add_css_to_body(css) {
       style.appendChild(document.createTextNode(css));
     }
   }
+});
   </script>
   </body>
 </html>

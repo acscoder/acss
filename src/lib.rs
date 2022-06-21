@@ -6,7 +6,6 @@ use std::collections::HashMap;
 
 mod css;
 use css::core::get_acss;
-use css::core::get_breakpoints;
 use css::custom_class::get_init_css;
 use std::borrow::Borrow;
 
@@ -36,11 +35,37 @@ const COMBINATOR_ELEMENTS_VEB: [&str;4] = [" "," + "," > "," ~ "];
 extern "C" {
     #[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
+
+    #[wasm_bindgen(js_namespace = localStorage)]
+    fn getItem(s: &str)->String;
 }
 
 #[wasm_bindgen]
-pub fn add_init_css()->String{
-    get_init_css()
+pub fn add_init_css(cf_var:String)->String{
+    let css_vars:  HashMap<&str, &str>  = serde_json::from_str(&cf_var).unwrap();
+    let ret = get_init_css();
+    let mut all_css:HashMap<String, Vec<String>> = HashMap::new();
+     
+    for (k, v) in css_vars.iter() {
+        let key_split: Vec<&str> = k.split("--").collect();
+        
+        if key_split.len() == 1{
+            if let Some(val) = all_css.get_mut("all") {
+                val.push("--".to_owned()+k+":"+v+";");
+            }else{
+                all_css.insert("all".to_string(),vec!["--".to_owned()+k+":"+v+";"]);
+            }
+        }else if key_split.len() == 2{
+            if let Some(val) = all_css.get_mut(key_split[1]) {
+                val.push("--".to_owned()+key_split[0]+":"+v+";");
+            }else{
+                all_css.insert(key_split[1].to_string(),vec!["--".to_owned()+key_split[0]+":"+v+";"]);
+            }
+        }
+
+    }
+
+    ret + css_hashmap_var_to_string(all_css).as_str()
 }
 #[wasm_bindgen]
 pub fn atomic_css_compile_from_html(html:String)->String {
@@ -57,7 +82,9 @@ pub fn atomic_css_compile(classes:String)->String {
     css_hashmap_to_string(atomic_css_classes(css_dedup_classes(classes)))
 }
 fn css_hashmap_to_string(all_css:HashMap<String, Vec<String>>)->String {
-    let css_breakpoints = get_breakpoints();
+    let cf = getItem("acss_config_breakpoints");
+    let css_breakpoints:  HashMap<&str, &str>  = serde_json::from_str(&cf).unwrap();
+
     let mut css = "".to_owned();
     for (pb, v) in all_css.iter() {
         if pb.to_owned() == "all".to_owned(){
@@ -72,7 +99,24 @@ fn css_hashmap_to_string(all_css:HashMap<String, Vec<String>>)->String {
     }
     css
 }
+fn css_hashmap_var_to_string(all_css:HashMap<String, Vec<String>>)->String {
+    let cf = getItem("acss_config_breakpoints");
+    let css_breakpoints:  HashMap<&str, &str>  = serde_json::from_str(&cf).unwrap();
 
+    let mut css = "".to_owned();
+    for (pb, v) in all_css.iter() {
+        if pb.to_owned() == "all".to_owned(){
+            css = css + ":root {"+v.join("").as_str()+"}";
+        }else{
+            if let Some(queryvar) = css_breakpoints.get(&pb.as_str()){
+                css = css + queryvar + r#"{"# + ":root {";
+                css = css + v.join("").as_str();
+                css = css + r#"}}"#;
+            }
+        }
+    }
+    css
+}
 fn atomic_css_classes(classes:String)->HashMap<String, Vec<String>> {
     let class_pattern:String = r#"([a-z]*)(["#.to_owned()+PSEUDO_CLASSES.join("|").as_str()+r#"]*)(["#+COMBINATOR_ELEMENTS.join("|").as_str()+r#"]?)([A-Z][A-Z a-z]*)\(([^)]*)\)([!]?)(["#+PSEUDO_CLASSES.join("|").as_str()+r#"]*)(["#+PSEUDO_ELEMENTS.join("|").as_str()+r#"]*)(-?-?([a-z]*))"#;
     let class_regex = Regex::new(class_pattern.as_str()).unwrap();
@@ -252,3 +296,4 @@ fn hex_to_dec(hex: &str) -> String {
         Err(_) => 0.to_string(),
     }
 }
+ 
