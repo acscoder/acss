@@ -33,15 +33,18 @@ const COMBINATOR_ELEMENTS_VEB: [&str;4] = [" "," + "," > "," ~ "];
 
 #[wasm_bindgen]
 extern "C" {
-    #[wasm_bindgen(js_namespace = console)]
+    /*#[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
 
     #[wasm_bindgen(js_namespace = localStorage)]
     fn getItem(s: &str)->String;
+
+    #[wasm_bindgen(js_namespace = localStorage)]
+    fn setItem(s: &str)->String;*/
 }
 
 #[wasm_bindgen]
-pub fn add_init_css(cf_var:String)->String{
+pub fn add_init_css(cf_var:String,cf_breakpoints:String)->String{
     let css_vars:  HashMap<&str, &str>  = serde_json::from_str(&cf_var).unwrap();
     let ret = get_init_css();
     let mut all_css:HashMap<String, Vec<String>> = HashMap::new();
@@ -65,59 +68,53 @@ pub fn add_init_css(cf_var:String)->String{
 
     }
 
-    ret + css_hashmap_var_to_string(all_css).as_str()
+    ret + css_hashmap_to_string(all_css,cf_breakpoints,":root".to_string()).as_str()
 }
 #[wasm_bindgen]
-pub fn atomic_css_compile_from_html(html:String)->String {
+pub fn atomic_css_compile_from_html(html:String,cf_breakpoints:String)->String {
     let regex = Regex::new(r#"class="([^"]+)""#).unwrap();
     let mut ret:String = "".to_string();
     for cap in regex.captures_iter(&html) {
         ret = ret + &cap[1] + " ";
     }
-    atomic_css_compile(ret)
+    atomic_css_compile(ret,cf_breakpoints)
 }
 
 #[wasm_bindgen]
-pub fn atomic_css_compile(classes:String)->String {
-    css_hashmap_to_string(atomic_css_classes(css_dedup_classes(classes)))
+pub fn atomic_css_compile(classes:String,cf_breakpoints:String)->String {
+    css_hashmap_to_string(atomic_css_classes(css_dedup_classes(classes)),cf_breakpoints,"".to_string())
 }
-fn css_hashmap_to_string(all_css:HashMap<String, Vec<String>>)->String {
-    let cf = getItem("acss_config_breakpoints");
-    let css_breakpoints:  HashMap<&str, &str>  = serde_json::from_str(&cf).unwrap();
-
+fn css_hashmap_to_string(all_css:HashMap<String, Vec<String>>,cf_breakpoints:String,var_css:String)->String {
+    let css_breakpoints:  HashMap<&str, &str>  = serde_json::from_str(&cf_breakpoints).unwrap();
     let mut css = "".to_owned();
     for (pb, v) in all_css.iter() {
         if pb.to_owned() == "all".to_owned(){
+            if var_css.as_str() != "" {
+                css = css + var_css.as_str() + "{";
+            } 
             css += v.join("").as_str();
+            if var_css.as_str() != "" {
+                css = css + "}";
+            } 
         }else{
             if let Some(queryvar) = css_breakpoints.get(&pb.as_str()){
                 css = css + queryvar + r#"{"#;
-                css += v.join("").as_str();
-                css = css + r#"}"#;
-            }
-        }
-    }
-    css
-}
-fn css_hashmap_var_to_string(all_css:HashMap<String, Vec<String>>)->String {
-    let cf = getItem("acss_config_breakpoints");
-    let css_breakpoints:  HashMap<&str, &str>  = serde_json::from_str(&cf).unwrap();
-
-    let mut css = "".to_owned();
-    for (pb, v) in all_css.iter() {
-        if pb.to_owned() == "all".to_owned(){
-            css = css + ":root {"+v.join("").as_str()+"}";
-        }else{
-            if let Some(queryvar) = css_breakpoints.get(&pb.as_str()){
-                css = css + queryvar + r#"{"# + ":root {";
+                if var_css.as_str() != "" {
+                    css = css + var_css.as_str() + "{";
+                } 
                 css = css + v.join("").as_str();
-                css = css + r#"}}"#;
+                css = css + r#"}"#;
+                if var_css.as_str() != "" {
+                    css = css + "}";
+                } 
             }
         }
     }
     css
 }
+
 fn atomic_css_classes(classes:String)->HashMap<String, Vec<String>> {
+    
     let class_pattern:String = r#"([a-z]*)(["#.to_owned()+PSEUDO_CLASSES.join("|").as_str()+r#"]*)(["#+COMBINATOR_ELEMENTS.join("|").as_str()+r#"]?)([A-Z][A-Z a-z]*)\(([^)]*)\)([!]?)(["#+PSEUDO_CLASSES.join("|").as_str()+r#"]*)(["#+PSEUDO_ELEMENTS.join("|").as_str()+r#"]*)(-?-?([a-z]*))"#;
     let class_regex = Regex::new(class_pattern.as_str()).unwrap();
     
@@ -239,6 +236,7 @@ fn get_param_verbose(param:&str,data:&str) -> String{
     }else{
         ret = param.to_string();
     } 
+
     ret
 }
 fn add_css_slash(param:&str)-> String{
@@ -249,6 +247,7 @@ fn add_css_slash(param:&str)-> String{
 }
 // 1/2  ^\d{1,2}/\d{1,2}$
 // [100%-20px]  \[([^]]*)\] 
+
 fn filter_css_param(param:&str)->String{
     let regex_var = Regex::new(r#"--\S+"#).unwrap();
     let regex_fraction = Regex::new(r#"^\d{1,2}/\d{1,2}$"#).unwrap();

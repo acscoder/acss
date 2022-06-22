@@ -1,9 +1,7 @@
 
 let wasm;
 
-const cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
-
-cachedTextDecoder.decode();
+let WASM_VECTOR_LEN = 0;
 
 let cachedUint8Memory0;
 function getUint8Memory0() {
@@ -12,12 +10,6 @@ function getUint8Memory0() {
     }
     return cachedUint8Memory0;
 }
-
-function getStringFromWasm0(ptr, len) {
-    return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
-}
-
-let WASM_VECTOR_LEN = 0;
 
 const cachedTextEncoder = new TextEncoder('utf-8');
 
@@ -79,16 +71,27 @@ function getInt32Memory0() {
     }
     return cachedInt32Memory0;
 }
+
+const cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
+
+cachedTextDecoder.decode();
+
+function getStringFromWasm0(ptr, len) {
+    return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
+}
 /**
 * @param {string} cf_var
+* @param {string} cf_breakpoints
 * @returns {string}
 */
-export function add_init_css(cf_var) {
+export function add_init_css(cf_var, cf_breakpoints) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passStringToWasm0(cf_var, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.add_init_css(retptr, ptr0, len0);
+        const ptr1 = passStringToWasm0(cf_breakpoints, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        wasm.add_init_css(retptr, ptr0, len0, ptr1, len1);
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         return getStringFromWasm0(r0, r1);
@@ -100,14 +103,17 @@ export function add_init_css(cf_var) {
 
 /**
 * @param {string} html
+* @param {string} cf_breakpoints
 * @returns {string}
 */
-export function atomic_css_compile_from_html(html) {
+export function atomic_css_compile_from_html(html, cf_breakpoints) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passStringToWasm0(html, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.atomic_css_compile_from_html(retptr, ptr0, len0);
+        const ptr1 = passStringToWasm0(cf_breakpoints, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        wasm.atomic_css_compile_from_html(retptr, ptr0, len0, ptr1, len1);
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         return getStringFromWasm0(r0, r1);
@@ -119,14 +125,17 @@ export function atomic_css_compile_from_html(html) {
 
 /**
 * @param {string} classes
+* @param {string} cf_breakpoints
 * @returns {string}
 */
-export function atomic_css_compile(classes) {
+export function atomic_css_compile(classes, cf_breakpoints) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passStringToWasm0(classes, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.atomic_css_compile(retptr, ptr0, len0);
+        const ptr1 = passStringToWasm0(cf_breakpoints, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        wasm.atomic_css_compile(retptr, ptr0, len0, ptr1, len1);
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         return getStringFromWasm0(r0, r1);
@@ -170,13 +179,6 @@ async function load(module, imports) {
 function getImports() {
     const imports = {};
     imports.wbg = {};
-    imports.wbg.__wbg_getItem_659121549eac7943 = function(arg0, arg1, arg2) {
-        const ret = localStorage.getItem(getStringFromWasm0(arg1, arg2));
-        const ptr0 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-        const len0 = WASM_VECTOR_LEN;
-        getInt32Memory0()[arg0 / 4 + 1] = len0;
-        getInt32Memory0()[arg0 / 4 + 0] = ptr0;
-    };
 
     return imports;
 }

@@ -2,30 +2,33 @@
 /* eslint-disable */
 /**
 * @param {string} cf_var
+* @param {string} cf_breakpoints
 * @returns {string}
 */
-export function add_init_css(cf_var: string): string;
+export function add_init_css(cf_var: string, cf_breakpoints: string): string;
 /**
 * @param {string} html
+* @param {string} cf_breakpoints
 * @returns {string}
 */
-export function atomic_css_compile_from_html(html: string): string;
+export function atomic_css_compile_from_html(html: string, cf_breakpoints: string): string;
 /**
 * @param {string} classes
+* @param {string} cf_breakpoints
 * @returns {string}
 */
-export function atomic_css_compile(classes: string): string;
+export function atomic_css_compile(classes: string, cf_breakpoints: string): string;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly add_init_css: (a: number, b: number, c: number) => void;
-  readonly atomic_css_compile_from_html: (a: number, b: number, c: number) => void;
-  readonly atomic_css_compile: (a: number, b: number, c: number) => void;
+  readonly add_init_css: (a: number, b: number, c: number, d: number, e: number) => void;
+  readonly atomic_css_compile_from_html: (a: number, b: number, c: number, d: number, e: number) => void;
+  readonly atomic_css_compile: (a: number, b: number, c: number, d: number, e: number) => void;
+  readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_malloc: (a: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number) => number;
-  readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_free: (a: number, b: number) => void;
 }
 
